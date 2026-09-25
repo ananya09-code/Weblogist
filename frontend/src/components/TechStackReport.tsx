@@ -1,14 +1,31 @@
-import type { IconType } from "react-icons";
-import { SiAngular,SiBootstrap,SiChakraui,SiDjango,SiExpress,SiFirebase,SiJavascript,SiLaravel,SiNextdotjs,SiNodedotjs,SiNetlify,SiPostgresql,SiPython,SiReact,SiRubyonrails,SiSvelte,SiSupabase,SiTailwindcss,SiTypescript,SiVercel,SiVite,SiVuedotjs,SiWebpack,SiJquery } from "react-icons/si";
-import type { TechStack, TechItem } from "../lib/types";
+import type { TechItem, TechStack } from "../lib/types";
 
-const labels: Record<string,string>={frontend:"Frontend frameworks and libraries",backend:"Server-side frameworks",languages:"Client-side languages",server_runtime:"Server-side language/runtime signals",styling:"Styling",hosting:"Hosting, web server, and CDN",tooling:"Build tooling",analytics:"Analytics"};
-const icons:Record<string,IconType>={React:SiReact,"Vue.js":SiVuedotjs,Svelte:SiSvelte,Angular:SiAngular,"Next.js":SiNextdotjs,TypeScript:SiTypescript,JavaScript:SiJavascript,Python:SiPython,"Ruby on Rails":SiRubyonrails,Laravel:SiLaravel,Django:SiDjango,"Express.js":SiExpress,"Node.js":SiNodedotjs,PostgreSQL:SiPostgresql,"Tailwind CSS":SiTailwindcss,Tailwind:SiTailwindcss,Bootstrap:SiBootstrap,"Chakra UI":SiChakraui,Vercel:SiVercel,Netlify:SiNetlify,Vite:SiVite,Webpack:SiWebpack,jQuery:SiJquery,Firebase:SiFirebase,Supabase:SiSupabase};
-const colors:Record<string,string>={React:"#61DAFB",Svelte:"#FF3E00","Tailwind CSS":"#38BDF8",Vercel:"#111111",Netlify:"#00AD9F","Ruby on Rails":"#CC0000","Next.js":"#111111",TypeScript:"#3178C6",JavaScript:"#F7DF7E",Python:"#3776AB","Node.js":"#539E43",PostgreSQL:"#4169E1",Bootstrap:"#7952B3",Vue:"#42B883",Angular:"#DD0031"};
+const categories: Array<{ key: keyof TechStack; label: string }> = [
+  { key: "frontend", label: "Frontend frameworks and libraries" },
+  { key: "backend", label: "Server-side frameworks" },
+  { key: "languages", label: "Client-side languages" },
+  { key: "server_runtime", label: "Server-side language/runtime signals" },
+  { key: "styling", label: "Styling" },
+  { key: "hosting", label: "Hosting, web server, and CDN" },
+  { key: "tooling", label: "Build tooling" },
+  { key: "analytics", label: "Analytics" },
+];
+const icons: Record<string, string> = {
+  "React": "⚛", "Vue.js": "◉", "Svelte": "◈", "Angular": "A", "Next.js": "N",
+  "jQuery": "$", "Express.js": "E", "Laravel": "L", "Django": "D", "Ruby on Rails": "R",
+  "WordPress": "W", "JavaScript": "JS", "TypeScript": "TS", "PHP": "PHP", "Node.js": "N",
+  "C# / .NET": ".NET", "Nginx": "N", "Apache": "A", "Cloudflare": "C", "Vercel": "▲",
+  "Tailwind CSS": "T", "Bootstrap": "B", "Vite": "⚡", "Webpack": "W",
+};
+const tier = (confidence: TechItem["confidence"]) => confidence === "high" ? "legendary" : confidence === "medium" ? "rare" : "cursed";
+const tierLabel = (confidence: TechItem["confidence"]) => confidence === "high" ? "LEGENDARY" : confidence === "medium" ? "RARE" : "CURSED RELIC";
 
-function Logo({name,confidence}:{name:string;confidence:TechItem["confidence"]}){const Icon=icons[name];return <span className={`grid h-[22px] w-[22px] place-items-center text-[22px] ${confidence==="low"?"grayscale opacity-55":""}`}>{Icon?<Icon style={{color:colors[name]}} aria-hidden="true"/>:<span className="text-[9px] font-extrabold text-signal">{name.slice(0,2).toUpperCase()}</span>}</span>}
+function Finding({ item, category }: { item: TechItem; category: string }) {
+  const kind = tier(item.confidence);
+  const score = Math.round(Math.max(0, Math.min(1, item.score)) * 100);
+  return <article className={`loot-card ${kind}`}><span className={`tier-chip ${kind}`}>{tierLabel(item.confidence)}</span><span className="loot-icon" aria-hidden="true">{icons[item.name] || "◇"}</span><strong className="loot-name">{item.name}</strong><span className="loot-category">{category}</span><span className="loot-score">Evidence {score}/100</span>{item.confidence === "low" && <span className="cursed-note">unable to determine</span>}<details className="evidence"><summary>Why we think this</summary><ul className="evidence-list">{(item.evidence_items?.length ? item.evidence_items.map((evidence, index) => <li key={`${evidence.signature}-${index}`}>{evidence.explanation} <span>Source: {evidence.source}</span></li>) : item.evidence.map((line, index) => <li key={index}>{line}</li>))}</ul></details></article>;
+}
 
-function Finding({item}:{item:TechItem}){const score=Math.round(Math.max(0,Math.min(1,item.score))*100);return <div className="inline-flex min-h-10 items-center gap-[9px] border border-transparent bg-[#F4F5EF] px-3 text-sm hover:border-rule"><Logo name={item.name} confidence={item.confidence}/><span className="font-medium">{item.name}</span><span className={`ml-[3px] h-[9px] w-[9px] rounded-full ${item.confidence==="high"?"bg-signal":item.confidence==="medium"?"border border-signal bg-gradient-to-r from-signal to-transparent":"border border-flag"}`} aria-label={`${item.confidence} confidence`} /><span className="text-xs tabular-nums text-[#657067]">{score}/100</span><details className="relative"><summary className="cursor-pointer list-none text-xs text-signal hover:underline">Why we think this</summary><div className="absolute left-0 top-5 z-10 w-72 border border-rule bg-[#F4F5EF] p-3 text-left text-xs text-[#424941] shadow-lg"><ul className="m-0 list-disc pl-4">{(item.evidence_items?.length?item.evidence_items.map((e,index)=><li key={`${e.signature}-${index}`}>{e.explanation} <span className="text-[#778078]">Source: {e.source}</span></li>):item.evidence.map((line,index)=><li key={index}>{line}</li>))}</ul></div></details></div>}
-
-function categoryIcon(category:string){return category==="frontend"?"▦":category==="backend"?"▣":category==="server_runtime"?"◈":category==="styling"?"◈":category==="hosting"?"◇":"⌘"}
-export function TechStackReport({tech}:{tech:TechStack}){return <div className="mt-6 flex flex-col gap-8"><p className="m-0 text-xs leading-5 text-[#657067]">Scores are public-signal evidence scores, not probabilities. Hidden server technologies and original source languages may not be detectable from a public scan.</p>{Object.keys(labels).map(key=>{const category=key as keyof TechStack;return <section key={category} className={`border-l-[3px] pl-[15px] ${category==="frontend"?"border-signal":category==="backend"||category==="server_runtime"?"border-flag":category==="languages"?"border-[#778278]":"border-rule"}`}><div className="flex items-center gap-[9px]"><span className="text-[15px] leading-none text-[#657067]">{categoryIcon(category)}</span><h3 className="m-0 text-[13px] font-bold">{labels[key]}</h3><span className="h-px flex-1 bg-rule opacity-55"/></div><div className="mt-3 flex flex-wrap gap-2">{tech[category]?.length?tech[category].map(item=><Finding key={`${category}-${item.name}`} item={item}/>):key==="backend"?<p className="m-0 text-[13px] text-flag">No server-side framework identified from public signals.</p>:key==="server_runtime"?<p className="m-0 text-[13px] text-[#778078]">No server-side runtime identified from public signals.</p>:<p className="m-0 text-[13px] text-[#778078]">No clear signal detected.</p>}</div></section>})}</div>}
+export function TechStackReport({ tech }: { tech: TechStack }) {
+  return <div className="tech-report flex flex-col gap-8">{categories.map(({ key, label }) => { const items = tech[key] || []; return <section className="report-section" key={key}><div className="section-heading"><div><h2>{label.toUpperCase()}</h2><p>{key === "backend" ? "Public signals only; hidden server frameworks may be undetectable." : "Signals collected from public responses and assets."}</p></div></div>{items.length ? <div className="loot-grid">{items.map((item) => <Finding key={`${key}-${item.name}`} item={item} category={label} />)}</div> : <p className={`no-findings ${key === "backend" || key === "server_runtime" ? "cursed" : ""}`}>{key === "backend" ? "No server-side framework identified from public signals." : key === "server_runtime" ? "No server-side runtime identified from public signals." : "No clear signal detected."}</p>}</section>; })}</div>;
+}
