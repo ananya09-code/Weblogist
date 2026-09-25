@@ -1,3 +1,5 @@
+import type { IconType } from "react-icons";
+import { SiAngular, SiApache, SiBootstrap, SiCloudflare, SiDjango, SiDotnet, SiExpress, SiFirebase, SiJavascript, SiJquery, SiLaravel, SiNetlify, SiNextdotjs, SiNginx, SiNodedotjs, SiPhp, SiPostgresql, SiReact, SiRubyonrails, SiSupabase, SiSvelte, SiTailwindcss, SiTypescript, SiVercel, SiVite, SiVuedotjs, SiWebpack, SiWordpress } from "react-icons/si";
 import type { TechItem, TechStack } from "../lib/types";
 
 const categories: Array<{ key: keyof TechStack; label: string }> = [
@@ -10,12 +12,12 @@ const categories: Array<{ key: keyof TechStack; label: string }> = [
   { key: "tooling", label: "Build tooling" },
   { key: "analytics", label: "Analytics" },
 ];
-const icons: Record<string, string> = {
-  "React": "⚛", "Vue.js": "◉", "Svelte": "◈", "Angular": "A", "Next.js": "N",
-  "jQuery": "$", "Express.js": "E", "Laravel": "L", "Django": "D", "Ruby on Rails": "R",
-  "WordPress": "W", "JavaScript": "JS", "TypeScript": "TS", "PHP": "PHP", "Node.js": "N",
-  "C# / .NET": ".NET", "Nginx": "N", "Apache": "A", "Cloudflare": "C", "Vercel": "▲",
-  "Tailwind CSS": "T", "Bootstrap": "B", "Vite": "⚡", "Webpack": "W",
+const icons: Record<string, IconType> = {
+  React: SiReact, "Vue.js": SiVuedotjs, Svelte: SiSvelte, Angular: SiAngular, "Next.js": SiNextdotjs, jQuery: SiJquery,
+  "Express.js": SiExpress, Laravel: SiLaravel, Django: SiDjango, "Ruby on Rails": SiRubyonrails, WordPress: SiWordpress,
+  JavaScript: SiJavascript, TypeScript: SiTypescript, PHP: SiPhp, "Node.js": SiNodedotjs, "C# / .NET": SiDotnet,
+  Nginx: SiNginx, Apache: SiApache, Cloudflare: SiCloudflare, Vercel: SiVercel, Netlify: SiNetlify,
+  "Tailwind CSS": SiTailwindcss, Bootstrap: SiBootstrap, Vite: SiVite, Webpack: SiWebpack, Supabase: SiSupabase, Firebase: SiFirebase, PostgreSQL: SiPostgresql,
 };
 const tier = (confidence: TechItem["confidence"]) => confidence === "high" ? "legendary" : confidence === "medium" ? "rare" : "cursed";
 const tierLabel = (confidence: TechItem["confidence"]) => confidence === "high" ? "LEGENDARY" : confidence === "medium" ? "RARE" : "CURSED RELIC";
@@ -23,7 +25,8 @@ const tierLabel = (confidence: TechItem["confidence"]) => confidence === "high" 
 function Finding({ item, category }: { item: TechItem; category: string }) {
   const kind = tier(item.confidence);
   const score = Math.round(Math.max(0, Math.min(1, item.score)) * 100);
-  return <article className={`loot-card ${kind}`}><span className={`tier-chip ${kind}`}>{tierLabel(item.confidence)}</span><span className="loot-icon" aria-hidden="true">{icons[item.name] || "◇"}</span><strong className="loot-name">{item.name}</strong><span className="loot-category">{category}</span><span className="loot-score">Evidence {score}/100</span>{item.confidence === "low" && <span className="cursed-note">unable to determine</span>}<details className="evidence"><summary>Why we think this</summary><ul className="evidence-list">{(item.evidence_items?.length ? item.evidence_items.map((evidence, index) => <li key={`${evidence.signature}-${index}`}>{evidence.explanation} <span>Source: {evidence.source}</span></li>) : item.evidence.map((line, index) => <li key={index}>{line}</li>))}</ul></details></article>;
+  const Icon = icons[item.name];
+  return <article className={`loot-card ${kind}`}><span className={`tier-chip ${kind}`}>{tierLabel(item.confidence)}</span><span className="loot-icon" aria-hidden="true">{Icon ? <Icon /> : <span className="text-[20px] font-bold text-parchment">{item.name.slice(0, 2).toUpperCase()}</span>}</span><strong className="loot-name">{item.name}</strong><span className="loot-category">{category}</span><span className="loot-score">Evidence {score}/100</span>{item.confidence === "low" && <span className="cursed-note">unable to determine</span>}<details className="evidence"><summary>Why we think this</summary><ul className="evidence-list">{(item.evidence_items?.length ? item.evidence_items.map((evidence, index) => <li key={`${evidence.signature}-${index}`}>{evidence.explanation} <span>Source: {evidence.source}</span></li>) : item.evidence.map((line, index) => <li key={index}>{line}</li>))}</ul></details></article>;
 }
 
 export function TechStackReport({ tech }: { tech: TechStack }) {

@@ -55,15 +55,15 @@
   .section-heading h2 { margin:0; color:var(--parchment); font:14px 'Press Start 2P',monospace; }
   .section-heading p { margin:7px 0 0; color:#c5b8c9; font-size:19px; }
   .panel { padding:22px; background:rgba(28,20,36,.94); border:3px solid #000; box-shadow:4px 4px 0 #000; }
-  .loot-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; }
-  .loot-card { min-height:150px; padding:14px; display:flex; flex-direction:column; align-items:flex-start; background:var(--panel-bg); border:2px solid var(--panel-border); }
+  .loot-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px; }
+  .loot-card { min-width:0; min-height:180px; padding:18px; display:flex; flex-direction:column; align-items:flex-start; background:var(--panel-bg); border:2px solid var(--panel-border); }
   .loot-card.legendary { box-shadow:4px 4px 0 var(--legendary); }
   .tier-chip { padding:5px 6px; color:#000; font:8px 'Press Start 2P',monospace; }
   .tier-chip.legendary { background:var(--legendary); }
   .tier-chip.rare { background:var(--rare); }
   .tier-chip.cursed { background:var(--cursed); color:var(--parchment); }
-  .loot-icon { margin-top:17px; font-size:27px; line-height:1; }
-  .loot-name { margin-top:10px; color:var(--parchment); font-size:24px; line-height:1; }
+  .loot-icon { display:grid; width:40px; height:40px; place-items:center; margin-top:17px; color:var(--parchment); font-size:30px; line-height:1; }
+  .loot-name { max-width:100%; margin-top:10px; color:var(--parchment); font-size:25px; line-height:1; overflow-wrap:anywhere; }
   .loot-category { margin-top:7px; color:#b9aabd; font:9px 'Press Start 2P',monospace; line-height:1.35; }
   .loot-score { margin-top:auto; padding-top:13px; color:var(--parchment); font-size:19px; }
   .cursed-note { margin-top:5px; color:var(--cursed); font-size:17px; }
