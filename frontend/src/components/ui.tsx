@@ -1,0 +1,5 @@
+import type { ReactNode } from "react";
+export function Tag({ children, tone = "quiet" }: { children: ReactNode; tone?: "quiet" | "signal" | "flag" }) { return <span className={`inline-flex items-center gap-2 border px-2.5 py-1 text-sm ${tone === "signal" ? "border-signal text-signal" : tone === "flag" ? "border-flag text-flag" : "border-rule text-ink"}`}>{children}</span>; }
+export function Cluster({ title, children }: { title: string; children: ReactNode }) { return <section className="border-t border-rule py-5"><h2 className="mb-3 text-sm font-semibold text-ink">{title}</h2>{children}</section>; }
+export function LogLine({ children }: { children: ReactNode }) { return <div className="flex gap-3 py-1 font-mono text-sm text-ink/70"><span className="text-signal">›</span><span>{children}</span></div>; }
+export function KeyValueRow({ label, value }: { label: string; value: ReactNode }) { return <div className="grid grid-cols-[9rem_1fr] gap-4 border-b border-rule/60 py-2 last:border-0"><dt className="text-sm text-ink/55">{label}</dt><dd className="text-sm text-ink">{value ?? "—"}</dd></div>; }

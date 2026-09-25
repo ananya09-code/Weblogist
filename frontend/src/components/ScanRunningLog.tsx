@@ -1,0 +1,4 @@
+export function ScanRunningLog({ status }: { status: string }) {
+  const lines = status === "queued" ? ["Queued for inspection", "Waiting for an analysis worker"] : ["Fetching HTML…", "Checking JS bundles…", "Rendering page if needed…", "Building report…"];
+  return <div className="mt-6 bg-ink px-[18px] py-4 text-[#d3e0d3]" role="status" aria-live="polite"><div className="mb-3 flex items-center gap-2 text-xs font-bold text-[#b4cdb9]"><span className="h-[7px] w-[7px] animate-pulse rounded-full bg-[#79a88a]"/>{status === "queued" ? "Scan queued" : "Scan in progress"}<span className="ml-auto text-[11px] font-normal text-[#829785] max-sm:hidden">This can take a moment</span></div>{lines.map(line=><div key={line} className="flex gap-3 py-1 font-mono text-xs text-[#9db4a1]"><span className="text-[#b4cdb9]">›</span><span>{line}</span></div>)}</div>;
+}

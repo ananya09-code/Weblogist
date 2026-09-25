@@ -1,0 +1,6 @@
+FROM mcr.microsoft.com/playwright/python:v1.51.0-noble
+WORKDIR /app
+COPY pyproject.toml uv.lock ./
+RUN pip install --no-cache-dir uv && uv sync --no-dev
+COPY . .
+CMD ["uv", "run", "celery", "-A", "app.worker.tasks.celery_app", "worker", "--loglevel=INFO", "--concurrency=3"]
