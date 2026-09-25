@@ -57,6 +57,7 @@ def run_pipeline(url):
         except Exception:
             pass
     for script in same_origin:
+        detector.scan_script_url(script)
         try:
             bundle_response, _, _ = fetch(script)
             content = bundle_response.content
@@ -96,7 +97,4 @@ def run_pipeline(url):
     except Exception:
         robots_status = "unavailable"
     tech_stack = detector.results()
-    if not tech_stack.get("backend"):
-        tech_stack["backend"] = [{"name": "Unable to determine", "confidence": "low", "score": 0.0, "evidence": [
-            "No backend signal cleared the confidence threshold"]}]
     return {"tech_stack": tech_stack, "api_routes": list({item["path"]: item for item in routes}.values()), "seo": extract_seo(soup, robots_status), "performance": compute_performance(soup, len(response.content), asset_bytes, ttfb), "raw_headers": dict(response.headers), "pages": sorted(links)[:15], "needs_playwright": needs_playwright}
